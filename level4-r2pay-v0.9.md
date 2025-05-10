@@ -12,11 +12,11 @@ Android Emulator os_version=12
 
 ##### 1 Run the app and encourted the crash, found the crash reason is ''Caused by: java.lang.ArithmeticException: divide by zero'
 
-![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-07-22-34-06-image.png)
+![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-07-22-34-06-image.png)
 
 ##### 2 Decompile the APK file, find the reason of the crash code
 
-![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-11-54-57-image.png)
+![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-11-54-57-image.png)
 
 Risk environments detected logic.
 
@@ -44,7 +44,7 @@ Risk environments detected logic.
 
    passes the file name to libtool-checker.so to check root environment
 
-![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-18-30-41-image.png)
+![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-18-30-41-image.png)
 
 # Java Layer Bypass
 
@@ -79,7 +79,7 @@ Launch the app again, it will crash in libnative-lib.so file, so we by pass the 
 
 Check init_array section of the so file, because the init_array functions called by linker, these are the functions called earlier.
 
-   ![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-12-04-30-image.png)
+   ![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-12-04-30-image.png)
 
 ###### Decompile the function and find the information
 
@@ -99,7 +99,7 @@ Based on android source code
 
 https://cs.android.com/android/platform/superproject/+/android-mainline-12.0.0_r121:bionic/linker/linker_soinfo.cpp;l=488
 
-   ![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-12-19-05-image.png)
+   ![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-12-19-05-image.png)
 
  Usually need to set a breakpoint in linker address in memory to enter init_array function. 
 
@@ -134,17 +134,17 @@ with open("/tmp/init_array_data.bin", "wb") as f:
 print(f"Dumped {end - start} bytes from {hex(start)} to {hex(end)}")
 ```
 
-   ![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-13-34-45-image.png)
+   ![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-13-34-45-image.png)
 
    Most likely these data will be used to detect risk features, frida/root/debugging
 
-   ![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-13-38-30-image.png)
+   ![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-13-38-30-image.png)
 
    To patch the SO file, need to find the data address in the original binary, can search in 010editor,and get the address 0x153108
 
 search encrypted data address 0x6F, 0x6A, 0x61, 0x60
 
-   ![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-13-41-10-image.png)
+   ![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-13-41-10-image.png)
 
    use python script to patch the decrypted data
 
@@ -173,11 +173,11 @@ After decrypting the string, can find some key detection information.
 
 ###### Continue to find the crash reason
 
-   ![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-12-21-20-image.png)
+   ![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-12-21-20-image.png)
 
  #00 pc 0000000000038f7c exists in function sub_20954
 
-![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-12-22-13-image.png)
+![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-12-22-13-image.png)
 
 ****
 
@@ -187,11 +187,11 @@ by the way, after patch the string decryptbin, it's easy to find the hook/debug 
 
 Frida feature: gmain 
 
-![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-19-05-36-image.png)
+![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-19-05-36-image.png)
 
 IDA feature: TracePid
 
-![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-19-03-51-image.png)
+![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-19-03-51-image.png)
 
 sub_83DC -> pthread_create(sub__20954) -> detect IDA, frida
 
@@ -215,11 +215,11 @@ then nop these detect function
 
 so far we have bypassed Java Detect and native detect, and app don't crash now.
 
-<img title="" src="file:///Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-14-37-12-image.png" alt="" width="378">
+<img title="" src="file://https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-14-37-12-image.png" alt="" width="378">
 
 When clicking the GENERATE R2COIN button, the app still crash
 
-![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-14-38-16-image.png)
+![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-14-38-16-image.png)
 
 continue to check button click event, it call native method 
 
@@ -241,15 +241,15 @@ struct JNINativeInterface {
 
 so we can find the third params is real JNI Method address 0x7d124, in this function ,it call opendir function in libc.so /proc/self/task
 
-![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-14-46-34-image.png)
+![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-14-46-34-image.png)
 
 also **frida** feature
 
-![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-14-47-35-image.png)
+![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-14-47-35-image.png)
 
 and read file content in /proc/self/task/pid/status, it may **be check root or IDA debug**
 
-![](/Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-14-48-05-image.png)
+![](https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-14-48-05-image.png)
 
 can see in the code that read /proc/self/task first, and then read /proc/self/task/%s/status one by one, and it will take more times.
 
@@ -277,7 +277,7 @@ In this way, we don't have to bypass each /proc/self/task/%s/stats file separate
 
 it works now and no crash happend.
 
-<img title="" src="file:///Users/kaibing/Library/Application%20Support/marktext/images/2025-05-10-14-54-19-image.png" alt="" width="390">
+<img title="" src="file://https://raw.githubusercontent.com/bingdff/reverse/main/images/2025-05-10-14-54-19-image.png" alt="" width="390">
 
 # 
 
